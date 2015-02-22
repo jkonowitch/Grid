@@ -6,6 +6,8 @@
 * fill in every 2nd cell
 * fill in every 3rd cell
 * randomly fill in 10 cells
+* change the color of the filled in cells; size of the grid
+* use class/id to select container
 
 ### Medium
 

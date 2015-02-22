@@ -1,15 +1,19 @@
-var EE = require('events').EventEmitter;
-var e = new EE;
+var Emitter = require('events').EventEmitter;
+var util = require('util');
 
 Grid = function(n) {
   this.points = [];
   this.size = n;
-  this._E = e;
 
   for (var i = 0; i < this.size; i++) {
     this.points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
   };
+
+  // inherit event emitter
+  Emitter.call(this);
 }
+
+util.inherits(Grid, Emitter);
 
 Grid.prototype.get = function(x, y) {
   return this.points[y][x];
@@ -22,11 +26,11 @@ Grid.prototype.set = function(x, y, val) {
   
   this.points[y][x] = val;
 
-  e.emit('changed');
+  this.emit('changed');
 }
 
 Grid.prototype.outOfBounds = function(x, y) {
-   return (x > this.size - 1 || y > this.size - 1);
+  return (x > this.size - 1 || y > this.size - 1);
 }
 
 Grid.prototype.isFilled = function(x, y) {
