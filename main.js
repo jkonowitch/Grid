@@ -15,3 +15,4 @@ Grid.prototype.attachTo = function(selector) {
 }
 
 window.Grid = Grid;
+window.Traveler = require('./src/traveler');

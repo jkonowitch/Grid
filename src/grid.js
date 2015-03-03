@@ -30,11 +30,21 @@ Grid.prototype.set = function(x, y, val) {
 }
 
 Grid.prototype.outOfBounds = function(x, y) {
-  return (x > this.size - 1 || y > this.size - 1);
+  return (x > this.size - 1 || y > this.size - 1 || x < 0 || y < 0);
 }
 
 Grid.prototype.isFilled = function(x, y) {
   return this.get(x, y) == 'fill';
+}
+
+Grid.prototype.unSet = function(x, y) {
+  this.set(x, y, 0);
+}
+
+Grid.prototype.unFill = function(x, y) {
+  if (this.isFilled(x, y)) {
+    this.unSet(x, y);
+  }
 }
 
 Grid.prototype.fill = function(x, y) {

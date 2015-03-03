@@ -16,7 +16,8 @@ Grid.prototype.attachTo = function(selector) {
 }
 
 window.Grid = Grid;
-},{"./src/grid":"/Users/jeff/dev/experiments/grid/src/grid.js","./src/grid-component.js":"/Users/jeff/dev/experiments/grid/src/grid-component.js","react":"/Users/jeff/dev/experiments/grid/node_modules/react/react.js"}],"/Users/jeff/dev/experiments/grid/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
+window.Traveler = require('./src/traveler');
+},{"./src/grid":"/Users/jeff/dev/experiments/grid/src/grid.js","./src/grid-component.js":"/Users/jeff/dev/experiments/grid/src/grid-component.js","./src/traveler":"/Users/jeff/dev/experiments/grid/src/traveler.js","react":"/Users/jeff/dev/experiments/grid/node_modules/react/react.js"}],"/Users/jeff/dev/experiments/grid/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -19235,7 +19236,9 @@ var Piece = React.createClass({displayName: "Piece",
   render: function() {
     var classes = "piece ";
 
-    if (this.props.status == 'fill') classes += 'fill';
+    if (typeof(this.props.status) === 'string') {
+      classes += this.props.status;
+    }
 
     return (
       React.createElement("div", {className: classes}
@@ -19310,11 +19313,21 @@ Grid.prototype.set = function(x, y, val) {
 }
 
 Grid.prototype.outOfBounds = function(x, y) {
-  return (x > this.size - 1 || y > this.size - 1);
+  return (x > this.size - 1 || y > this.size - 1 || x < 0 || y < 0);
 }
 
 Grid.prototype.isFilled = function(x, y) {
   return this.get(x, y) == 'fill';
+}
+
+Grid.prototype.unSet = function(x, y) {
+  this.set(x, y, 0);
+}
+
+Grid.prototype.unFill = function(x, y) {
+  if (this.isFilled(x, y)) {
+    this.unSet(x, y);
+  }
 }
 
 Grid.prototype.fill = function(x, y) {
@@ -19322,4 +19335,78 @@ Grid.prototype.fill = function(x, y) {
 }
 
 module.exports = Grid;
-},{"events":"/Users/jeff/dev/experiments/grid/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","util":"/Users/jeff/dev/experiments/grid/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}]},{},["/Users/jeff/dev/experiments/grid/main.js"]);
+},{"events":"/Users/jeff/dev/experiments/grid/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","util":"/Users/jeff/dev/experiments/grid/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/jeff/dev/experiments/grid/src/traveler.js":[function(require,module,exports){
+Traveler = function(x, y, grid) {
+  this.orientation = 'right';
+  this.x = x;
+  this.y = y;
+  this.grid = grid;
+
+  this.place();
+}
+
+Traveler.prototype.move = function() {
+  this.grid.unSet(this.x, this.y);
+  this.advanceCoords();
+  this.place();
+}
+
+Traveler.prototype.moveError = function() {
+  this.backupCoords();
+  this.place();
+  throw new Error("cannot move here");
+}
+
+Traveler.prototype.advanceCoords = function() {
+  switch(this.orientation) {
+    case 'right':
+      this.x++;
+      break;
+    case 'left':
+      this.x--;
+      break;
+    case 'up':
+      this.y--;
+      break;
+    case 'down':
+      this.y++;
+      break;
+  }
+}
+
+Traveler.prototype.backupCoords = function() {
+  switch(this.orientation) {
+    case 'right':
+      this.x--;
+      break;
+    case 'left':
+      this.x++;
+      break;
+    case 'up':
+      this.y++;
+      break;
+    case 'down':
+      this.y--;
+      break;
+  }
+}
+
+Traveler.prototype.place = function() {
+  if (this.grid.isFilled(this.x, this.y)) {
+    this.moveError();
+  }
+
+  try {
+    this.grid.set(this.x, this.y, 'traveler ' + this.orientation);
+  } catch(e) {
+    this.moveError();
+  }
+}
+
+Traveler.prototype.orient = function(orientation) {
+  this.orientation = orientation;
+  this.place();
+}
+
+module.exports = Traveler;
+},{}]},{},["/Users/jeff/dev/experiments/grid/main.js"]);

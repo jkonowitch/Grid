@@ -22,12 +22,15 @@ describe('Grid', function() {
     expect(function() { g.set(11, 9) }).toThrow('out of bounds');
   });
 
-  it('fills in', function() {
+  it('fills in and unfills', function() {
     expect(g.isFilled(1, 0)).toBe(false);
 
     g.fill(1, 0)
 
     expect(g.isFilled(1, 0)).toBe(true);
     expect(g.isFilled(0, 1)).toBe(false);
+
+    g.unFill(1, 0);
+    expect(g.isFilled(1, 0)).toBe(false);
   });
 });

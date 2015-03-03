@@ -4,7 +4,9 @@ var Piece = React.createClass({
   render: function() {
     var classes = "piece ";
 
-    if (this.props.status == 'fill') classes += 'fill';
+    if (typeof(this.props.status) === 'string') {
+      classes += this.props.status;
+    }
 
     return (
       <div className={classes}>
