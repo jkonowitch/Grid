@@ -26,7 +26,7 @@ describe('Grid', function() {
   it('cannot fill in something already filled', function() {
     g.fill(1, 1, 'monkey');
 
-    expect(function() { g.fill(1, 1, 'hello') }).toThrow('already occupied');
+    expect(function() { g.fill(1, 1, 'hello') }).toThrow('already occupied with: monkey. use unFill.');
   });
 
   it('throws if out of bounds', function() {

@@ -19322,7 +19322,7 @@ Grid.prototype.fill = function(x, y, val) {
   if (this.outOfBounds(x, y)) {
     throw new Error('out of bounds');
   } else if (this.isFilled(x, y) && val != 0) {
-    throw new Error('already occupied');
+    throw new Error('already occupied with: ' + this.at(x, y) + '. use unFill.');
   }
   
   points[y][x] = val;
