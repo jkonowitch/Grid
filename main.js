@@ -7,10 +7,10 @@ Grid.prototype.attachTo = function(selector) {
   var gc = <GridComponent />
   var c = React.render(gc, elt);
 
-  c.setState({ pieces: this.points });
+  c.setState({ pieces: this.points() });
 
   this.on('changed', function() {
-    c.setState({ pieces: this.points });
+    c.setState({ pieces: this.points() });
   }.bind(this))
 }
 

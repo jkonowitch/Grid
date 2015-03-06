@@ -1,12 +1,12 @@
 var Emitter = require('events').EventEmitter;
 var util = require('util');
+var points = [];
 
 Grid = function(n) {
-  this.points = [];
   this.size = n;
 
   for (var i = 0; i < this.size; i++) {
-    this.points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
+    points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
   };
 
   // inherit event emitter
@@ -15,16 +15,23 @@ Grid = function(n) {
 
 util.inherits(Grid, Emitter);
 
-Grid.prototype.get = function(x, y) {
-  return this.points[y][x];
+Grid.prototype.at = function(x, y) {
+  return points[y][x];
 }
 
-Grid.prototype.set = function(x, y, val) {
+Grid.prototype.points = function() {
+  // return a copy
+  return points.slice(0);
+}
+
+Grid.prototype.fill = function(x, y, val) {
   if (this.outOfBounds(x, y)) {
     throw new Error('out of bounds');
+  } else if (this.isFilled(x, y) && val != 0) {
+    throw new Error('already occupied');
   }
   
-  this.points[y][x] = val;
+  points[y][x] = val;
 
   this.emit('changed');
 }
@@ -34,21 +41,11 @@ Grid.prototype.outOfBounds = function(x, y) {
 }
 
 Grid.prototype.isFilled = function(x, y) {
-  return this.get(x, y) == 'fill';
-}
-
-Grid.prototype.unSet = function(x, y) {
-  this.set(x, y, 0);
+  return this.at(x, y) != 0;
 }
 
 Grid.prototype.unFill = function(x, y) {
-  if (this.isFilled(x, y)) {
-    this.unSet(x, y);
-  }
-}
-
-Grid.prototype.fill = function(x, y) {
-  this.set(x, y, 'fill');
+  this.fill(x, y, 0);
 }
 
 module.exports = Grid;

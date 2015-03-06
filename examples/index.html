@@ -21,8 +21,8 @@
       display: inline-block;
     }
 
-    .grid .piece.fill {
-      background-color: black;
+    .grid .piece.block {
+      box-shadow: 1px 1px 1px dimgrey;
     }
 
     .piece.traveler {
@@ -51,7 +51,7 @@
   <script src="../build/app.js"></script>
   <script type="text/javascript">
     var g = new Grid(20);
-    g.fill(1, 1);
+    g.fill(1, 1, 'color cornflowerblue');
     g.attachTo('#container');
 
     var t = new Traveler(0, 0, g);

@@ -8,7 +8,7 @@ Traveler = function(x, y, grid) {
 }
 
 Traveler.prototype.move = function() {
-  this.grid.unSet(this.x, this.y);
+  this.grid.unFill(this.x, this.y);
   this.advanceCoords();
   this.place();
 }
@@ -54,12 +54,8 @@ Traveler.prototype.backupCoords = function() {
 }
 
 Traveler.prototype.place = function() {
-  if (this.grid.isFilled(this.x, this.y)) {
-    this.moveError();
-  }
-
   try {
-    this.grid.set(this.x, this.y, 'traveler ' + this.orientation);
+    this.grid.fill(this.x, this.y, 'traveler ' + this.orientation);
   } catch(e) {
     this.moveError();
   }
@@ -67,6 +63,7 @@ Traveler.prototype.place = function() {
 
 Traveler.prototype.orient = function(orientation) {
   this.orientation = orientation;
+  this.grid.unFill(this.x, this.y);
   this.place();
 }
 

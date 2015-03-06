@@ -3,7 +3,7 @@ g = new Grid(10);
 g.isFilled(4, 5);
 // false
 
-g.fill(4, 5);
+g.fill(4, 5, 'color red');
 
 g.isFilled(4, 5);
 // true

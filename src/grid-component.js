@@ -3,13 +3,20 @@ var React = require('react');
 var Piece = React.createClass({
   render: function() {
     var classes = "piece ";
+    var divStyle = {};
+    var m;
 
     if (typeof(this.props.status) === 'string') {
-      classes += this.props.status;
+      if (m = this.props.status.match(/color (.+)/i)) {
+        divStyle.backgroundColor = m[1];
+        classes += 'block';
+      } else {
+        classes += this.props.status;  
+      }
     }
 
     return (
-      <div className={classes}>
+      <div className={classes} style={divStyle}>
       </div>
     );
   }
