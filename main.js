@@ -1,3 +1,6 @@
+// so we can hide that message
+window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = true;
+
 var Grid = require('./src/grid');
 var GridComponent = require('./src/grid-component.js');
 var React = require('react');

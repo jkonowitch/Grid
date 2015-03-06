@@ -25,7 +25,7 @@ var Piece = React.createClass({
 var Row = React.createClass({
   render: function() {
     var ps = this.props.row.map(function(p, x) {
-      return <Piece x={x} status={p} y={this.props.y} />
+      return <Piece x={x} status={p} y={this.props.y} key={x} />
     }.bind(this));
 
     return (
@@ -43,7 +43,7 @@ var GridElement = React.createClass({
 
   render: function() {
     var rows = this.state.pieces.map(function(row, y) { 
-      return <Row row={row} y={y} />
+      return <Row key={y} row={row} y={y} />
     });
 
     return (

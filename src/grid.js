@@ -4,16 +4,23 @@ var points = [];
 
 Grid = function(n) {
   this.size = n;
-
-  for (var i = 0; i < this.size; i++) {
-    points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
-  };
+  this.reset();
 
   // inherit event emitter
   Emitter.call(this);
 }
 
 util.inherits(Grid, Emitter);
+
+Grid.prototype.reset = function() {
+  points.length = 0;
+
+  for (var i = 0; i < this.size; i++) {
+    points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
+  };
+
+  this.emit('changed');
+}
 
 Grid.prototype.at = function(x, y) {
   this.checkCoordsAreIntegers(x, y);

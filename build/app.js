@@ -1,4 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/jeff/dev/experiments/grid/main.js":[function(require,module,exports){
+// so we can hide that message
+window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = true;
+
 var Grid = require('./src/grid');
 var GridComponent = require('./src/grid-component.js');
 var React = require('react');
@@ -19257,7 +19260,7 @@ var Piece = React.createClass({displayName: "Piece",
 var Row = React.createClass({displayName: "Row",
   render: function() {
     var ps = this.props.row.map(function(p, x) {
-      return React.createElement(Piece, {x: x, status: p, y: this.props.y})
+      return React.createElement(Piece, {x: x, status: p, y: this.props.y, key: x})
     }.bind(this));
 
     return (
@@ -19275,7 +19278,7 @@ var GridElement = React.createClass({displayName: "GridElement",
 
   render: function() {
     var rows = this.state.pieces.map(function(row, y) { 
-      return React.createElement(Row, {row: row, y: y})
+      return React.createElement(Row, {key: y, row: row, y: y})
     });
 
     return (
@@ -19294,16 +19297,23 @@ var points = [];
 
 Grid = function(n) {
   this.size = n;
-
-  for (var i = 0; i < this.size; i++) {
-    points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
-  };
+  this.reset();
 
   // inherit event emitter
   Emitter.call(this);
 }
 
 util.inherits(Grid, Emitter);
+
+Grid.prototype.reset = function() {
+  points.length = 0;
+
+  for (var i = 0; i < this.size; i++) {
+    points[i] = Array.apply(null, Array(this.size)).map(Boolean).map(Number);
+  };
+
+  this.emit('changed');
+}
 
 Grid.prototype.at = function(x, y) {
   this.checkCoordsAreIntegers(x, y);
