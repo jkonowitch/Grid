@@ -18,6 +18,11 @@ describe('Grid', function() {
     expect(g.at(1,1)).toBe('monkey');
   });
 
+  it('coords must be integers', function() {
+    expect(function() { g.fill('sd', 'ds', 'asd');}).toThrow('coordinates must be numbers');
+    expect(function() { g.at('34', 'sd');}).toThrow('coordinates must be numbers');    
+  });
+
   it('cannot fill in something already filled', function() {
     g.fill(1, 1, 'monkey');
 

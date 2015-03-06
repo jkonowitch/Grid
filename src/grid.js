@@ -16,6 +16,8 @@ Grid = function(n) {
 util.inherits(Grid, Emitter);
 
 Grid.prototype.at = function(x, y) {
+  this.checkCoordsAreIntegers(x, y);
+
   return points[y][x];
 }
 
@@ -25,6 +27,8 @@ Grid.prototype.points = function() {
 }
 
 Grid.prototype.fill = function(x, y, val) {
+  this.checkCoordsAreIntegers(x, y);
+
   if (this.outOfBounds(x, y)) {
     throw new Error('out of bounds');
   } else if (this.isFilled(x, y) && val != 0) {
@@ -34,6 +38,12 @@ Grid.prototype.fill = function(x, y, val) {
   points[y][x] = val;
 
   this.emit('changed');
+}
+
+Grid.prototype.checkCoordsAreIntegers = function(x, y) {
+  if (typeof x != 'number' || typeof y != 'number') {
+    throw new Error('coordinates must be numbers');
+  }
 }
 
 Grid.prototype.outOfBounds = function(x, y) {
