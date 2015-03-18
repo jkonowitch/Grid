@@ -33,7 +33,7 @@ Grid.prototype.points = function() {
   return points.slice(0);
 }
 
-Grid.prototype.fill = function(x, y, val) {
+Grid.prototype.canFill = function(x, y, val) {
   this.checkCoordsAreIntegers(x, y);
 
   if (this.outOfBounds(x, y)) {
@@ -41,8 +41,24 @@ Grid.prototype.fill = function(x, y, val) {
   } else if (this.isFilled(x, y) && val != 0) {
     throw new Error('already occupied with: ' + this.at(x, y) + '. use unFill.');
   }
+}
+
+Grid.prototype.fill = function(x, y, val) {
+  this.canFill(x, y, val);
   
   points[y][x] = val;
+  this.emit('changed');
+}
+
+Grid.prototype.batchFill = function(coords) {
+  for (var i = 0; i < coords.length; i++) {
+    var x = coords[i][0],
+        y = coords[i][1],
+        val = coords[i][2];
+
+    this.canFill(x, y, val);        
+    points[y][x] = val;
+  }
 
   this.emit('changed');
 }
